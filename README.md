@@ -17,9 +17,10 @@ welcome!)
 
 ## Installation
 
-`python setup.py` should do the trick.  Note that, as of this writing,
-this package requires Beets 1.2.2 (currently unreleased) or later.
-I'm running Beets from Git right now.
+Clone this repository and then `python setup.py` should do the trick.
+Note that, as of this writing, the moveall plug-in in this package
+requires Beets 1.2.2 (currently unreleased) or later.  I'm running
+Beets from Git right now.
 
 Once you've installed this package, to use one or both of these
 plug-ins you'll need to [configure them in Beets][enable-plugins].
