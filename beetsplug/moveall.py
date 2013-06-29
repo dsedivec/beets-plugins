@@ -1,8 +1,12 @@
 import os.path
 import os
 import shutil
+import logging
 
 from beets import plugins, library, util
+
+
+log = logging.getLogger("beets")
 
 
 class MoveAllPlugin (plugins.BeetsPlugin):
@@ -41,5 +45,11 @@ def handle_cli_exit(lib, **_kwargs):
         else:
             print "moving all leftovers in %s to %s" % (src_dir, dst_dir)
             for dirent in os.listdir(src_dir):
-                shutil.move(os.path.join(src_dir, dirent), dst_dir)
+                dirent_path = os.path.join(src_dir, dirent)
+                try:
+                    shutil.move(dirent_path, dst_dir)
+                except shutil.Error, ex:
+                    # Log it but move on.
+                    log.critical("failed to move %r to %r: %s", dirent_path,
+                                 dst_dir, ex)
             util.prune_dirs(src_dir)
