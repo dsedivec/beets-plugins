@@ -5,6 +5,7 @@ import re
 import sys
 import codecs
 import locale
+import shlex
 
 from beets import plugins, ui, library
 from beets.ui import commands
@@ -60,6 +61,7 @@ def edit(lib, _opts, args):
     editor = os.environ.get("EDITOR")
     if not editor:
         raise Exception("you must set EDITOR in your environment")
+    editor_command = shlex.split(editor)
     items = _do_query(lib, args)
     if len(items) < 1:
         raise Exception("query didn't match any items")
@@ -68,7 +70,8 @@ def edit(lib, _opts, args):
     StreamWriter = codecs.getwriter(encoding)
     _write_analysis(items, StreamWriter(temp_file))
     temp_file.flush()
-    subprocess.check_call([editor, temp_file.name])
+    editor_command.append(temp_file.name)
+    subprocess.check_call(editor_command)
     temp_file.seek(0)
     new_values = {}
     print "=== new values for fields ==="
