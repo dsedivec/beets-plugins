@@ -10,14 +10,16 @@ log = logging.getLogger("beets")
 
 
 class MoveAllPlugin (plugins.BeetsPlugin):
-    pass
+    def __init__(self):
+        super(MoveAllPlugin, self).__init__()
+        self.register_listener('item_moved', handle_item_moved)
+        self.register_listener('cli_exit', handle_cli_exit)
 
 
 MULTIPLE_DESTS = object()
 directories_moved = {}
 
 
-@MoveAllPlugin.listen("item_moved")
 def handle_item_moved(source, destination, **_kwargs):
     global directories_moved
     src_dir = os.path.dirname(source)
@@ -32,7 +34,6 @@ def handle_item_moved(source, destination, **_kwargs):
         directories_moved[src_dir] = dst_dir
 
 
-@MoveAllPlugin.listen("cli_exit")
 def handle_cli_exit(lib, **_kwargs):
     for src_dir, dst_dir in directories_moved.iteritems():
         if dst_dir is MULTIPLE_DESTS:
